@@ -1,0 +1,38 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=directus
+      - POSTGRES_PASSWORD=directus
+      - POSTGRES_DB=n8n
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - DOMAIN_NAME=notsofar.live
+      - SUBDOMAIN=v4
+      - WEBHOOK_URL=https://v4.notsofar.live/
+      - N8N_PORT=5678
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=admin
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=directus
+      - DB_POSTGRESDB_PASSWORD=directus
+      - N8N_ENCRYPTION_KEY='fd30390c4ce2ca3d1b9f2b355d47ff1a02ad2b0fecedb36d3481f4e9d3bfe3f6'
+    depends_on:
+      - postgres
+    volumes:
+      - ./dist:/home/node/.n8n/custom/node_modules/directus
