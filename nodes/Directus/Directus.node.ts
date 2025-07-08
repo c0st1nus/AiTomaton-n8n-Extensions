@@ -3,7 +3,6 @@ import {
     INodeType,
     INodeTypeDescription,
     INodeExecutionData,
-    NodeConnectionType,
 		NodeOperationError,
 } from 'n8n-workflow';
 import { directusNodeOperations } from './directus.desctiption';
@@ -21,8 +20,8 @@ export class Directus implements INodeType {
         subtitle: '={{$parameter["operation"]}}',
         description: 'A node for interacting with the Directus API',
         defaults: { name: 'Directus API Node' },
-        inputs: [NodeConnectionType.Main],
-        outputs: [NodeConnectionType.Main],
+        inputs: ['main'],
+        outputs: ['main'],
 				usableAsTool: true,
         credentials: [
             {

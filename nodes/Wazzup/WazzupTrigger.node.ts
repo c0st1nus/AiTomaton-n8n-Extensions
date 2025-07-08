@@ -5,7 +5,6 @@ import {
 	INodeTypeDescription,
 	IWebhookResponseData,
 	INodeExecutionData,
-	NodeConnectionType,
 } from 'n8n-workflow';
 
 enum EventTypes {
@@ -17,7 +16,7 @@ enum EventTypes {
 	Channels = 'channels',
 	Default = 'default',
 }
-		
+
 
 export class WazzupTrigger implements INodeType {
 	description: INodeTypeDescription = {
@@ -29,7 +28,7 @@ export class WazzupTrigger implements INodeType {
 		description: 'Starts a workflow when Wazzup sends a webhook. Automatically registers and unregisters the webhook.',
 		defaults: { name: 'Wazzup Trigger' },
 		inputs: [],
-		outputs: [NodeConnectionType.Main],
+		outputs: ["main"],
 		credentials: [
 			{
 				name: 'wazzupApi',
@@ -74,7 +73,7 @@ export class WazzupTrigger implements INodeType {
 				const subscribeToMessagesAndStatuses = eventTypes.includes('statuses');
 				const subscribeToContactsAndDeals = eventTypes.includes('contacts_deals');
 				const subscribeToChannells = eventTypes.includes('channels');
-				
+
 				console.log('Subscribe to Messages and Statuses:', subscribeToMessagesAndStatuses);
 				console.log('Subscribe to Contacts and Deals:', subscribeToContactsAndDeals);
 				console.log('Subscribe to Channels:', subscribeToChannells);

@@ -1,10 +1,10 @@
 import {
 	INodeType,
 	INodeTypeDescription,
-	NodeConnectionType,
-	NodeOperationError
+	NodeOperationError,
+	IExecuteFunctions,
+	INodeExecutionData
 } from 'n8n-workflow';
-import { IExecuteFunctions, INodeExecutionData } from 'n8n-workflow/dist/Interfaces';
 // @ts-ignore
 import WebSocket from 'ws';
 
@@ -19,8 +19,8 @@ export class WebsocketsReplyNode implements INodeType {
 		defaults: {
 			name: 'Websockets Send Node',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: ['main'],
+		outputs: ['main'],
 		properties: [
 			{
 				displayName: 'Send Content',

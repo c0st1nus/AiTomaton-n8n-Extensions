@@ -1,13 +1,10 @@
 import {
 	INodeType,
 	INodeTypeDescription,
-	NodeConnectionType,
 	NodeOperationError,
-} from 'n8n-workflow';
-import {
 	ITriggerFunctions,
 	ITriggerResponse,
-} from 'n8n-workflow/dist/Interfaces';
+} from 'n8n-workflow';
 // @ts-ignore
 import WebSocket from 'ws';
 
@@ -23,7 +20,7 @@ export class WebsocketsNode implements INodeType {
 		},
 		icon: 'file:websocket.svg',
 		inputs: [],
-		outputs: [NodeConnectionType.Main],
+		outputs: ["main"],
 		properties: [
 			{
 				displayName: 'Websocket URL',

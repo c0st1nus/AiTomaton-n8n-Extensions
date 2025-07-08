@@ -3,7 +3,6 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	INodeExecutionData,
-	NodeConnectionType,
 } from 'n8n-workflow';
 import { wazzupNodeProperties } from './Wazzup.node.properties';
 
@@ -12,13 +11,13 @@ export class Wazzup implements INodeType {
 		displayName: 'Wazzup',
 		name: 'wazzup',
 		icon: 'file:wazzup.svg',
-		group: ['communication'],
+		group: ['transform'],
 		version: 2,
 		subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
 		description: 'Interact with the Wazzup API',
 		defaults: { name: 'Wazzup' },
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: ['main'],
+		outputs: ['main'],
 		credentials: [{ name: 'wazzupApi', required: true }],
 		properties: wazzupNodeProperties,
 	};
