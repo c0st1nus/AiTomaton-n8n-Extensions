@@ -12,6 +12,7 @@ enum EventTypes {
 	CreateContact = 'createContact',
 	CreateDeal = 'createDeal',
 	NewMessage = 'messages',
+	Switch = 'switch',
 	Default = 'default'
 }
 
@@ -50,6 +51,7 @@ export class WazzupTrigger implements INodeType {
 					{ name: 'Message Status Changes', value: 'statuses' },
 					{ name: 'Channels Status Updates', value: 'channels' },
 					{ name: 'Contact and Deal Creation', value: 'contacts_deals' },
+					{ name: 'Switch', value: 'switch' },
 				],
 				default: ['messages'],
 				description:
@@ -71,10 +73,12 @@ export class WazzupTrigger implements INodeType {
 				const subscribeToMessagesAndStatuses = eventTypes.includes('statuses');
 				const subscribeToContactsAndDeals = eventTypes.includes('contacts_deals');
 				const subscribeToChannells = eventTypes.includes('channels');
+				const subscribeToSwitch = eventTypes.includes('switch');
 
 				console.log('Subscribe to Messages and Statuses:', subscribeToMessagesAndStatuses);
 				console.log('Subscribe to Contacts and Deals:', subscribeToContactsAndDeals);
 				console.log('Subscribe to Channels:', subscribeToChannells);
+				console.log('Subscribe to Switch:', subscribeToSwitch);
 
 				const body = {
 					webhooksUri: webhookUrl,
@@ -82,6 +86,7 @@ export class WazzupTrigger implements INodeType {
 						messagesAndStatuses: subscribeToMessagesAndStatuses,
 						contactsAndDealsCreation: subscribeToContactsAndDeals,
 						phones: subscribeToChannells,
+						switch: subscribeToSwitch,
 					},
 				};
 
@@ -107,6 +112,7 @@ export class WazzupTrigger implements INodeType {
 						messagesAndStatuses: false,
 						contactsAndDealsCreation: false,
 						channelsUpdates: false,
+						switch: false,
 					},
 				};
 
@@ -138,6 +144,26 @@ export class WazzupTrigger implements INodeType {
 					Body: req.body,
 					headers: req.headers,
 				},
+			}];
+
+			return {
+				workflowData: [returnData],
+			};
+		}
+
+		// Специальная обработка для switch events
+		if (incomingEventType === EventTypes.Switch) {
+			const switchData = req.body[EventTypes.Switch];
+			const userId = switchData?.user_id || null;
+
+			const returnData: INodeExecutionData[] = [{
+				json: {
+					eventType: incomingEventType,
+					user_id: userId,
+					switchData: switchData,
+					headers: req.headers,
+					body: req.body,
+				}
 			}];
 
 			return {
