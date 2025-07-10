@@ -10,11 +10,9 @@ import {
 enum EventTypes {
 	Test = 'test',
 	CreateContact = 'createContact',
+	CreateDeal = 'createDeal',
 	NewMessage = 'messages',
-	Statuses = 'statuses',
-	ContactsDeals = 'contacts_deals',
-	Channels = 'channels',
-	Default = 'default',
+	Default = 'default'
 }
 
 
