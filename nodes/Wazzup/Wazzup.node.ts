@@ -54,13 +54,8 @@ export class Wazzup implements INodeType {
 						};
 					}
 				} else if (resource === 'contact' || resource === 'deal') {
-					if (operation === 'create') {
+					if (operation === 'createOrUpdate') {
 						method = 'POST';
-						body = JSON.parse(this.getNodeParameter(`${resource}Data`, i) as string);
-					} else if (operation === 'update') {
-						method = 'POST';
-						const resourceId = this.getNodeParameter(`${resource}Id`, i) as string;
-						endpoint = `/${resource}s/${resourceId}`;
 						body = JSON.parse(this.getNodeParameter(`${resource}Data`, i) as string);
 					} else if (operation === 'delete') {
 						method = 'DELETE';
