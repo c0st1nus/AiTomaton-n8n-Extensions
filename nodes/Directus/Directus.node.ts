@@ -104,29 +104,56 @@ export class Directus implements INodeType {
 									let body: any = {};
 									const collection = this.getNodeParameter('collection', i) as string;
 									requestUrl = `${baseUrl}/items/${collection}`;
+									
+									// Инициализируем URLSearchParams
 									const params = new URLSearchParams();
 
+									// --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
+									if (operation === 'findMany') {
+											const filterJson = this.getNodeParameter('filter', i, '{}') as string;
+											if (filterJson && filterJson.trim() !== '{}') {
+													// Directus ожидает фильтр как строковый параметр 'filter'
+													params.append('filter', filterJson);
+											}
+
+											const fields = this.getNodeParameter('fields', i, '') as string;
+											if (fields) {
+													params.append('fields', fields);
+											}
+									}
+									// --- КОНЕЦ ИЗМЕНЕНИЙ ---
+
 									if (operation === 'findOne' || operation === 'update' || operation === 'delete') {
-										const recordId = this.getNodeParameter('recordId', i) as string;
-										requestUrl += `/${recordId}`;
+											const recordId = this.getNodeParameter('recordId', i) as string;
+											requestUrl += `/${recordId}`;
 									}
 									if (operation === 'create' || operation === 'update') {
-										const data = this.getNodeParameter('data', i, '{}') as string;
-										body = JSON.parse(data);
+											const data = this.getNodeParameter('data', i, '{}') as string;
+											body = JSON.parse(data);
 									}
 									switch (operation) {
-										case 'findMany': case 'findOne': requestMethod = 'GET'; break;
-										case 'create': requestMethod = 'POST'; break;
-										case 'update': requestMethod = 'PATCH'; break;
-										case 'delete': requestMethod = 'DELETE'; break;
-										default: throw new NodeOperationError(this.getNode(), `The operation "${operation}" is not supported.`);
+											case 'findMany': case 'findOne': requestMethod = 'GET'; break;
+											case 'create': requestMethod = 'POST'; break;
+											case 'update': requestMethod = 'PATCH'; break;
+											case 'delete': requestMethod = 'DELETE'; break;
+											default: throw new NodeOperationError(this.getNode(), `The operation "${operation}" is not supported.`);
 									}
+
 									const queryString = params.toString();
-									if (queryString) requestUrl += `?${queryString}`;
-									const options = { method: requestMethod, url: requestUrl, body, json: true };
+									if (queryString) {
+											requestUrl += `?${queryString}`;
+									}
+
+									const options = { 
+											method: requestMethod, 
+											url: requestUrl, 
+											body, 
+											json: true 
+									};
+
 									const response = await this.helpers.httpRequestWithAuthentication.call(this, 'directusAuthApi', options);
 									returnData.push({ json: response.data ? response.data : response, pairedItem: { item: i } });
-								}
+							}
             } catch (error) {
                 if (this.continueOnFail()) {
                     returnData.push({ json: { error: error.message }, pairedItem: { item: i } });
